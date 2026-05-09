@@ -1,29 +1,24 @@
 {
-  "name": "coffee-supplychain-contract",
+  "name": "coffee-supply-chain",
   "version": "1.0.0",
-  "description": "This project showcases the journey of coffee beans on blockchain.",
-  "main": "truffle.js",
-  "directories": {
-    "test": "test"
-  },
+  "description": "Ethereum-based supply chain for tracking coffee beans from farm to consumer.",
+  "main": "hardhat.config.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx hardhat test",
+    "compile": "npx hardhat compile",
+    "deploy": "npx hardhat run scripts/deploy.js",
+    "deploy:local": "npx hardhat run scripts/deploy.js --network localhost",
+    "node": "npx hardhat node"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@gitlab.com/vikas_imperialsoftech/coffee-supplychain-contract.git"
-  },
-  "author": "Imperial Softech",
+  "keywords": ["ethereum", "blockchain", "supply-chain", "coffee", "hardhat"],
+  "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://gitlab.com/vikas_imperialsoftech/coffee-supplychain-contract/issues"
-  },
-  "homepage": "https://gitlab.com/vikas_imperialsoftech/coffee-supplychain-contract#README",
-  "dependencies": {
-    "chai": "^4.1.2",
-    "eth-gas-reporter": "^0.1.7",
-    "ethereumjs-abi": "^0.6.5",
-    "growl": "^1.10.5",
-    "truffle-hdwallet-provider": "0.0.5"
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "@nomiclabs/hardhat-waffle": "^2.0.6",
+    "@openzeppelin/contracts": "^4.9.3",
+    "chai": "^4.3.7",
+    "ethers": "^5.7.2",
+    "hardhat": "^2.17.1"
   }
 }

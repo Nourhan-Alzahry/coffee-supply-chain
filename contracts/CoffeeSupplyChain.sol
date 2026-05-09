@@ -1,10 +1,11 @@
-pragma solidity ^0.4.23;
-import "./SupplyChainStorage.sol";
-import "./Ownable.sol";
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
 
-contract CoffeeSupplyChain is Ownable
-{
-  
+import "./SupplyChainStorage.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+contract CoffeeSupplyChain is Ownable {
+    // Events
     event PerformCultivation(address indexed user, address indexed batchNo);
     event DoneInspection(address indexed user, address indexed batchNo);
     event DoneHarvesting(address indexed user, address indexed batchNo);
@@ -12,256 +13,266 @@ contract CoffeeSupplyChain is Ownable
     event DoneImporting(address indexed user, address indexed batchNo);
     event DoneProcessing(address indexed user, address indexed batchNo);
 
-    
-    /*Modifier*/
-    modifier isValidPerformer(address batchNo, string role) {
-    
-        require(keccak256(supplyChainStorage.getUserRole(msg.sender)) == keccak256(role));
-        require(keccak256(supplyChainStorage.getNextAction(batchNo)) == keccak256(role));
+    // Modifiers
+    modifier isValidPerformer(address batchNo, string memory role) {
+        require(
+            keccak256(abi.encodePacked(supplyChainStorage.getUserRole(msg.sender))) ==
+                keccak256(abi.encodePacked(role)),
+            "Invalid role"
+        );
+        require(
+            keccak256(abi.encodePacked(supplyChainStorage.getNextAction(batchNo))) ==
+                keccak256(abi.encodePacked(role)),
+            "Invalid next action"
+        );
         _;
     }
-    
-    /* Storage Variables */    
-    SupplyChainStorage supplyChainStorage;
-    
-    constructor(address _supplyChainAddress) public {
+
+    // Storage variable
+    SupplyChainStorage public supplyChainStorage;
+
+    constructor(address _supplyChainAddress) {
         supplyChainStorage = SupplyChainStorage(_supplyChainAddress);
     }
-    
-    
-    /* Get Next Action  */    
 
-    function getNextAction(address _batchNo) public view returns(string action)
+    // Get next action
+    function getNextAction(address _batchNo) public view returns (string memory) {
+        return supplyChainStorage.getNextAction(_batchNo);
+    }
+
+    // Get basic details
+    function getBasicDetails(address _batchNo)
+        public
+        view
+        returns (
+            string memory registrationNo,
+            string memory farmerName,
+            string memory farmAddress,
+            string memory exporterName,
+            string memory importerName
+        )
     {
-       (action) = supplyChainStorage.getNextAction(_batchNo);
-       return (action);
-    }
-    
-
-    /* get Basic Details */
-    
-    function getBasicDetails(address _batchNo) public view returns (string registrationNo,
-                                                                     string farmerName,
-                                                                     string farmAddress,
-                                                                     string exporterName,
-                                                                     string importerName) {
-        /* Call Storage Contract */
-        (registrationNo, farmerName, farmAddress, exporterName, importerName) = supplyChainStorage.getBasicDetails(_batchNo);  
-        return (registrationNo, farmerName, farmAddress, exporterName, importerName);
+        return supplyChainStorage.getBasicDetails(_batchNo);
     }
 
-    /* perform Basic Cultivation */
-    
-    function addBasicDetails(string _registrationNo,
-                             string _farmerName,
-                             string _farmAddress,
-                             string _exporterName,
-                             string _importerName
-                            ) public onlyOwner returns(address) {
-    
-        address batchNo = supplyChainStorage.setBasicDetails(_registrationNo,
-                                                            _farmerName,
-                                                            _farmAddress,
-                                                            _exporterName,
-                                                            _importerName);
-        
-        emit PerformCultivation(msg.sender, batchNo); 
-        
-        return (batchNo);
-    }                            
-    
-    /* get Farm Inspection */
-    
-    function getFarmInspectorData(address _batchNo) public view returns (string coffeeFamily,string typeOfSeed,string fertilizerUsed) {
-        /* Call Storage Contract */
-        (coffeeFamily, typeOfSeed, fertilizerUsed) = supplyChainStorage.getFarmInspectorData(_batchNo);  
-        return (coffeeFamily, typeOfSeed, fertilizerUsed);
+    // Perform basic cultivation
+    function addBasicDetails(
+        string memory _registrationNo,
+        string memory _farmerName,
+        string memory _farmAddress,
+        string memory _exporterName,
+        string memory _importerName
+    ) public onlyOwner returns (address) {
+        // Generate a unique batch address
+        address batchNo = address(
+            uint160(
+                uint256(
+                    keccak256(
+                        abi.encodePacked(
+                            block.timestamp,
+                            msg.sender,
+                            _registrationNo,
+                            _farmerName,
+                            blockhash(block.number - 1)
+                        )
+                    )
+                )
+            )
+        );
+        supplyChainStorage.setBasicDetails(
+            batchNo,
+            _registrationNo,
+            _farmerName,
+            _farmAddress,
+            _exporterName,
+            _importerName
+        );
+        emit PerformCultivation(msg.sender, batchNo);
+        return batchNo;
     }
-    
-    /* perform Farm Inspection */
-    
-    function updateFarmInspectorData(address _batchNo,
-                                    string _coffeeFamily,
-                                    string _typeOfSeed,
-                                    string _fertilizerUsed) 
-                                public isValidPerformer(_batchNo,'FARM_INSPECTION') returns(bool) {
-        /* Call Storage Contract */
-        bool status = supplyChainStorage.setFarmInspectorData(_batchNo, _coffeeFamily, _typeOfSeed, _fertilizerUsed);  
-        
+
+    // Get farm inspector data
+    function getFarmInspectorData(address _batchNo)
+        public
+        view
+        returns (
+            string memory coffeeFamily,
+            string memory typeOfSeed,
+            string memory fertilizerUsed
+        )
+    {
+        return supplyChainStorage.getFarmInspectorData(_batchNo);
+    }
+
+    // Perform farm inspection
+    function updateFarmInspectorData(
+        address _batchNo,
+        string memory _coffeeFamily,
+        string memory _typeOfSeed,
+        string memory _fertilizerUsed
+    ) public isValidPerformer(_batchNo, "FARM_INSPECTION") returns (bool) {
+        bool status = supplyChainStorage.setFarmInspectorData(
+            _batchNo,
+            _coffeeFamily,
+            _typeOfSeed,
+            _fertilizerUsed
+        );
         emit DoneInspection(msg.sender, _batchNo);
-        return (status);
+        return status;
     }
 
-    
-    /* get Harvest */
-    
-    function getHarvesterData(address _batchNo) public view returns (string cropVariety, string temperatureUsed, string humidity) {
-        /* Call Storage Contract */
-        (cropVariety, temperatureUsed, humidity) =  supplyChainStorage.getHarvesterData(_batchNo);  
-        return (cropVariety, temperatureUsed, humidity);
+    // Get harvester data
+    function getHarvesterData(address _batchNo)
+        public
+        view
+        returns (
+            string memory cropVariety,
+            string memory temperatureUsed,
+            string memory humidity
+        )
+    {
+        return supplyChainStorage.getHarvesterData(_batchNo);
     }
-    
-    /* perform Harvest */
-    
-    function updateHarvesterData(address _batchNo,
-                                string _cropVariety,
-                                string _temperatureUsed,
-                                string _humidity) 
-                                public isValidPerformer(_batchNo,'HARVESTER') returns(bool) {
-                                    
-        /* Call Storage Contract */
-        bool status = supplyChainStorage.setHarvesterData(_batchNo, _cropVariety, _temperatureUsed, _humidity);  
-        
+
+    // Perform harvesting
+    function updateHarvesterData(
+        address _batchNo,
+        string memory _cropVariety,
+        string memory _temperatureUsed,
+        string memory _humidity
+    ) public isValidPerformer(_batchNo, "HARVESTER") returns (bool) {
+        bool status = supplyChainStorage.setHarvesterData(
+            _batchNo,
+            _cropVariety,
+            _temperatureUsed,
+            _humidity
+        );
         emit DoneHarvesting(msg.sender, _batchNo);
-        return (status);
+        return status;
     }
-    
-    /* get Export */
-    
-    function getExporterData(address _batchNo) public view returns (uint256 quantity,
-                                                                    string destinationAddress,
-                                                                    string shipName,
-                                                                    string shipNo,
-                                                                    uint256 departureDateTime,
-                                                                    uint256 estimateDateTime,
-                                                                    uint256 exporterId) {
-        /* Call Storage Contract */
-       (quantity,
-        destinationAddress,
-        shipName,
-        shipNo,
-        departureDateTime,
-        estimateDateTime,
-        exporterId) =  supplyChainStorage.getExporterData(_batchNo);  
-        
-        return (quantity,
-                destinationAddress,
-                shipName,
-                shipNo,
-                departureDateTime,
-                estimateDateTime,
-                exporterId);
+
+    // Get exporter data
+    function getExporterData(address _batchNo)
+        public
+        view
+        returns (
+            uint256 quantity,
+            string memory destinationAddress,
+            string memory shipName,
+            string memory shipNo,
+            uint256 departureDateTime,
+            uint256 estimateDateTime,
+            uint256 exporterId
+        )
+    {
+        return supplyChainStorage.getExporterData(_batchNo);
     }
-    
-    /* perform Export */
-    
-    function updateExporterData(address _batchNo,
-                                uint256 _quantity,    
-                                string _destinationAddress,
-                                string _shipName,
-                                string _shipNo,
-                                uint256 _estimateDateTime,
-                                uint256 _exporterId) 
-                                public isValidPerformer(_batchNo,'EXPORTER') returns(bool) {
-                                    
-        /* Call Storage Contract */
-        bool status = supplyChainStorage.setExporterData(_batchNo, _quantity, _destinationAddress, _shipName,_shipNo, _estimateDateTime,_exporterId);  
-        
+
+    // Perform exporting
+    function updateExporterData(
+        address _batchNo,
+        uint256 _quantity,
+        string memory _destinationAddress,
+        string memory _shipName,
+        string memory _shipNo,
+        uint256 _estimateDateTime,
+        uint256 _exporterId
+    ) public isValidPerformer(_batchNo, "EXPORTER") returns (bool) {
+        bool status = supplyChainStorage.setExporterData(
+            _batchNo,
+            _quantity,
+            _destinationAddress,
+            _shipName,
+            _shipNo,
+            _estimateDateTime,
+            _exporterId
+        );
         emit DoneExporting(msg.sender, _batchNo);
-        return (status);
+        return status;
     }
-    
-    /* get Import */
-    
-    function getImporterData(address _batchNo) public view returns (uint256 quantity,
-                                                                    string shipName,
-                                                                    string shipNo,
-                                                                    uint256 arrivalDateTime,
-                                                                    string transportInfo,
-                                                                    string warehouseName,
-                                                                    string warehouseAddress,
-                                                                    uint256 importerId) {
-        /* Call Storage Contract */
-        (quantity,
-         shipName,
-         shipNo,
-         arrivalDateTime,
-         transportInfo,
-         warehouseName,
-         warehouseAddress,
-         importerId) =  supplyChainStorage.getImporterData(_batchNo);  
-         
-         return (quantity,
-                 shipName,
-                 shipNo,
-                 arrivalDateTime,
-                 transportInfo,
-                 warehouseName,
-                 warehouseAddress,
-                 importerId);
-        
+
+    // Get importer data
+    function getImporterData(address _batchNo)
+        public
+        view
+        returns (
+            uint256 quantity,
+            string memory shipName,
+            string memory shipNo,
+            uint256 arrivalDateTime,
+            string memory transportInfo,
+            string memory warehouseName,
+            string memory warehouseAddress,
+            uint256 importerId
+        )
+    {
+        return supplyChainStorage.getImporterData(_batchNo);
     }
-    
-    /* perform Import */
-    
-    function updateImporterData(address _batchNo,
-                                uint256 _quantity, 
-                                string _shipName,
-                                string _shipNo,
-                                string _transportInfo,
-                                string _warehouseName,
-                                string _warehouseAddress,
-                                uint256 _importerId) 
-                                public isValidPerformer(_batchNo,'IMPORTER') returns(bool) {
-                                    
-        /* Call Storage Contract */
-        bool status = supplyChainStorage.setImporterData(_batchNo, _quantity, _shipName, _shipNo, _transportInfo,_warehouseName,_warehouseAddress,_importerId);  
-        
+
+    // Perform importing
+    function updateImporterData(
+        address _batchNo,
+        uint256 _quantity,
+        string memory _shipName,
+        string memory _shipNo,
+        string memory _transportInfo,
+        string memory _warehouseName,
+        string memory _warehouseAddress,
+        uint256 _importerId
+    ) public isValidPerformer(_batchNo, "IMPORTER") returns (bool) {
+        bool status = supplyChainStorage.setImporterData(
+            _batchNo,
+            _quantity,
+            _shipName,
+            _shipNo,
+            _transportInfo,
+            _warehouseName,
+            _warehouseAddress,
+            _importerId
+        );
         emit DoneImporting(msg.sender, _batchNo);
-        return (status);
+        return status;
     }
-    
-    
-    /* get Processor */
-    
-    function getProcessorData(address _batchNo) public view returns (uint256 quantity,
-                                                                    string temperature,
-                                                                    uint256 rostingDuration,
-                                                                    string internalBatchNo,
-                                                                    uint256 packageDateTime,
-                                                                    string processorName,
-                                                                    string processorAddress) {
-        /* Call Storage Contract */
-        (quantity,
-         temperature,
-         rostingDuration,
-         internalBatchNo,
-         packageDateTime,
-         processorName,
-         processorAddress) =  supplyChainStorage.getProcessorData(_batchNo);  
-         
-         return (quantity,
-                 temperature,
-                 rostingDuration,
-                 internalBatchNo,
-                 packageDateTime,
-                 processorName,
-                 processorAddress);
- 
+
+    // Get processor data
+    function getProcessorData(address _batchNo)
+        public
+        view
+        returns (
+            uint256 quantity,
+            string memory temperature,
+            uint256 rostingDuration,
+            string memory internalBatchNo,
+            uint256 packageDateTime,
+            string memory processorName,
+            string memory processorAddress
+        )
+    {
+        return supplyChainStorage.getProcessorData(_batchNo);
     }
-    
-    /* perform Processing */
-    
-    function updateProcessorData(address _batchNo,
-                              uint256 _quantity, 
-                              string _temperature,
-                              uint256 _rostingDuration,
-                              string _internalBatchNo,
-                              uint256 _packageDateTime,
-                              string _processorName,
-                              string _processorAddress) public isValidPerformer(_batchNo,'PROCESSOR') returns(bool) {
-                                    
-        /* Call Storage Contract */
-        bool status = supplyChainStorage.setProcessorData(_batchNo, 
-                                                        _quantity, 
-                                                        _temperature, 
-                                                        _rostingDuration, 
-                                                        _internalBatchNo,
-                                                        _packageDateTime,
-                                                        _processorName,
-                                                        _processorAddress);  
-        
+
+    // Perform processing
+    function updateProcessorData(
+        address _batchNo,
+        uint256 _quantity,
+        string memory _temperature,
+        uint256 _rostingDuration,
+        string memory _internalBatchNo,
+        uint256 _packageDateTime,
+        string memory _processorName,
+        string memory _processorAddress
+    ) public isValidPerformer(_batchNo, "PROCESSOR") returns (bool) {
+        bool status = supplyChainStorage.setProcessorData(
+            _batchNo,
+            _quantity,
+            _temperature,
+            _rostingDuration,
+            _internalBatchNo,
+            _packageDateTime,
+            _processorName,
+            _processorAddress
+        );
         emit DoneProcessing(msg.sender, _batchNo);
-        return (status);
+        return status;
     }
 }
