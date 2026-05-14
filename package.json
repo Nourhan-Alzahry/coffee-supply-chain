@@ -10,7 +10,13 @@
     "deploy:local": "npx hardhat run scripts/deploy.js --network localhost",
     "node": "npx hardhat node"
   },
-  "keywords": ["ethereum", "blockchain", "supply-chain", "coffee", "hardhat"],
+  "keywords": [
+    "ethereum",
+    "blockchain",
+    "supply-chain",
+    "coffee",
+    "hardhat"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
@@ -18,7 +24,10 @@
     "@nomiclabs/hardhat-waffle": "^2.0.6",
     "@openzeppelin/contracts": "^4.9.3",
     "chai": "^4.3.7",
-    "ethers": "^5.7.2",
+    "ethers": "^5.8.0",
     "hardhat": "^2.17.1"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2"
   }
 }

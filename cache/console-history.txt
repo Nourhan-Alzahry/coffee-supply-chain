@@ -1,3 +1,130 @@
+await coffee.connect(owner).updateFarmInspectorData(batchNo, "Arabica", "Typica", "Organic");
+console.log("Batch:", batchNo);
+const batchNo = batchEvent.args.batchNo;
+const batchEvent = receipt.events.find(e => e.event === "PerformCultivation");
+let receipt = await tx.wait();
+let tx = await coffee.connect(owner).addBasicDetails("REG001", "Ahmed", "Farm", "ExportCo", "ImportCo");
+await user.connect(owner).updateUserForAdmin(owner.address, "Processor", "555", "PROCESSOR", true, "hash5");
+await user.connect(owner).updateUserForAdmin(owner.address, "Importer", "444", "IMPORTER", true, "hash4");
+await user.connect(owner).updateUserForAdmin(owner.address, "Exporter", "333", "EXPORTER", true, "hash3");
+await user.connect(owner).updateUserForAdmin(owner.address, "Harvester", "222", "HARVESTER", true, "hash2");
+await user.connect(owner).updateUserForAdmin(owner.address, "Inspector", "111", "FARM_INSPECTION", true, "hash1");
+console.log("Owner address:", owner.address);
+const [owner] = await ethers.getSigners();
+const user = await ethers.getContractAt("SupplyChainUser", "0xc6E80cdD87bf05806448968796C895c35F068Af8");
+const coffee = await ethers.getContractAt("CoffeeSupplyChain", "0xe41b8c4169Ab4ad750372ba2c2768cd3bAb50e21");
+await user.connect(owner).updateUserForAdmin(inspector.address, "Inspector", "111", "FARM_INSPECTION", true, "hash1");
+const [owner, inspector, harvester, exporter, importer, processor] = await ethers.getSigners();
+await user.connect(owner).updateUserForAdmin(inspector.address, "Inspector", "111", "FARM_INSPECTION", true, "hash1");
+const [owner, inspector, harvester, exporter, importer, processor] = await ethers.getSigners();
+const user = await ethers.getContractAt("SupplyChainUser", "0xc6E80cdD87bf05806448968796C895c35F068Af8");
+const coffee = await ethers.getContractAt("CoffeeSupplyChain", "0xe41b8c4169Ab4ad750372ba2c2768cd3bAb50e21");
+(await ethers.getSigners())[0].address
+await ethers.getSigners())[0].address
+console.log("Farm Inspector Data:", await coffee.getFarmInspectorData(batchNo));
+console.log("Status:", status);
+const status = await coffee.getNextAction(batchNo);
+console.log("Final status:", final);
+const final = await coffee.getNextAction(batchNo);
+await coffee.connect(processor).updateProcessorData(batchNo, 1000, "200°C", 600, "B001", Math.floor(Date.now()/1000)+172800, "RoastCo", "Roastery");
+await coffee.connect(importer).updateImporterData(batchNo, 1000, "Ship1", "S123", "Container", "Warehouse", "Address", 54321);
+await coffee.connect(exporter).updateExporterData(batchNo, 1000, "Port of Rotterdam", "Ship1", "S123", Math.floor(Date.now()/1000)+86400, 12345);
+await coffee.connect(harvester).updateHarvesterData(batchNo, "Caturra", "25°C", "80%");
+await coffee.connect(inspector).updateFarmInspectorData(batchNo, "Arabica", "Typica", "Organic");
+console.log("Batch:", batchNo);
+const batchNo = parsed.args.batchNo;
+const parsed = iface.parseLog(receipt.logs.find(l => l.address === coffee.address));
+const iface = coffee.interface;
+let receipt = await tx.wait();
+let tx = await coffee.addBasicDetails("REG001", "Ahmed", "Farm", "ExportCo", "ImportCo");
+await userContract.connect(owner).updateUserForAdmin(processor.address, "Processor", "555", "PROCESSOR", true, "hash5");
+await userContract.connect(owner).updateUserForAdmin(importer.address, "Importer", "444", "IMPORTER", true, "hash4");
+await userContract.connect(owner).updateUserForAdmin(exporter.address, "Exporter", "333", "EXPORTER", true, "hash3");
+await userContract.connect(owner).updateUserForAdmin(harvester.address, "Harvester", "222", "HARVESTER", true, "hash2");
+await userContract.connect(owner).updateUserForAdmin(inspector.address, "Inspector", "111", "FARM_INSPECTION", true, "hash1");
+const [owner, inspector, harvester, exporter, importer, processor] = await ethers.getSigners();
+const userContract = await ethers.getContractAt("SupplyChainUser", "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0");
+const coffee = await ethers.getContractAt("CoffeeSupplyChain", "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512");
+console.log("Batch:", batchNo);
+const batchNo = parsed.args.batchNo;
+const parsed = iface.parseLog(receipt.logs.find(l => l.address === coffee.address));
+const iface = coffee.interface;
+let receipt = await tx.wait();
+let tx = await coffee.addBasicDetails("REG001", "Ahmed", "Farm", "ExportCo", "ImportCo");
+await userContract.connect(owner).updateUserForAdmin(processor.address, "Processor", "555", "PROCESSOR", true, "hash5");
+await userContract.connect(owner).updateUserForAdmin(importer.address, "Importer", "444", "IMPORTER", true, "hash4");
+await userContract.connect(owner).updateUserForAdmin(exporter.address, "Exporter", "333", "EXPORTER", true, "hash3");
+await userContract.connect(owner).updateUserForAdmin(harvester.address, "Harvester", "222", "HARVESTER", true, "hash2");
+await userContract.connect(owner).updateUserForAdmin(inspector.address, "Inspector", "111", "FARM_INSPECTION", true, "hash1");
+const [owner, inspector, harvester, exporter, importer, processor] = await ethers.getSigners();
+const userContract = await ethers.getContractAt("SupplyChainUser", "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0");
+");
+const coffee = await ethers.getContractAt("CoffeeSupplyChain", "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
+)
+    "Organic Fertilizer"
+    "Premium Seed",
+    "Arabica",
+    batchNo,
+await inspector.updateFarmInspectorData(
+const inspector = coffee.connect(accounts[1])
+const accounts = await ethers.getSigners()
+console.log(next)
+let next = await coffee.getNextAction(batchNo)
+console.log(details)
+let details = await coffee.getBasicDetails(batchNo)
+let batchNo = '0xfaa6cBAC16515315e2325a15C5Fffd92F11b3f14'
+}
+    } catch (e) {}
+        console.log(parsed.args)
+        console.log(parsed.name)
+        const parsed = coffee.interface.parseLog(log)
+    try {
+for (const log of receipt.logs) {
+console.log(receipt.logs)
+let receipt = await tx.wait()
+)
+    "USA Coffee Imports"
+    "Global Export Ltd",
+    "Minya Farm",
+    "Ahmed Hassan",
+    "REG-001",
+let tx = await coffee.addBasicDetails(
+const coffee = await Coffee.attach("0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512")
+const Coffee = await ethers.getContractFactory("CoffeeSupplyChain")
+console.log("Batch Address:", batchNo);
+const batchNo = parsedLog.args.batchNo;
+const parsedLog = coffee.interface.parseLog(receipt.logs[0]);
+console.log(details)
+let details = await coffee.getBasicDetails(batchNo)
+let batchNo = '0xA5FCD97561bD016fa6bb3Fb0f522990DA639DF63'
+console.log(batchNo)
+let batchNo = receipt.logs[0].args.batchNo
+console.log(batchNo)
+let batchNo = receipt.logs[0].args.batchNo
+}
+    } catch (e) {}
+        console.log(parsed.args)
+        console.log(parsed.name)
+        const parsed = coffee.interface.parseLog(log)
+    try {
+for (const log of receipt.logs) {
+console.log(receipt.logs)
+let receipt = await tx.wait()
+)
+    "USA Coffee Imports"
+    "Global Export Ltd",
+    "Minya Farm",
+    "Ahmed Hassan",
+    "REG-001",
+let tx = await coffee.addBasicDetails(
+addBasicDetails()
+)
+    ethers.parseEther("1")
+    "Organic Coffee",
+    "Blue Farm",
+await coffee.addItem(
+const coffee = await Coffee.attach("0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512")
+const Coffee = await ethers.getContractFactory("CoffeeSupplyChain")
 }
   }
   } catch (e) {
