@@ -40,8 +40,8 @@
       ]
     },
     "D:\\00Univ\\Level 3\\Semester 2\\Blockchain\\Sections\\coffee-trace\\coffee-supplychain-ethereum\\contracts\\SupplyChainStorage.sol": {
-      "lastModificationDate": 1778335175656,
-      "contentHash": "46d61e35361a9b4fa029c009e623d709",
+      "lastModificationDate": 1778875692924,
+      "contentHash": "a6c57e3bc6cee9a3a7aeb07f154834db",
       "sourceName": "contracts/SupplyChainStorage.sol",
       "solcConfig": {
         "version": "0.8.17",

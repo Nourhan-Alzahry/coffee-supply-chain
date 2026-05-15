@@ -2,11 +2,13 @@
 // Run with: npx hardhat run scripts/logTransactions.js --network localhost
 
 const hre = require("hardhat");
+const fs = require('fs');
 
 async function main() {
   // Contract addresses from your deployment (verify with your hardhat node)
-  const USER_CONTRACT_ADDRESS = "0x9fE46736679d209a65F0992F2272dE9f3c7fa6e0".toLowerCase();
-  const COFFEE_SUPPLY_ADDRESS = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512".toLowerCase();
+  const deployed = JSON.parse(fs.readFileSync('deployed.json', 'utf8'));
+const COFFEE_SUPPLY_ADDRESS = deployed.coffee;
+const USER_CONTRACT_ADDRESS = deployed.user;
 
   // Get contract instances
   const coffeeSupply = await hre.ethers.getContractAt("CoffeeSupplyChain", COFFEE_SUPPLY_ADDRESS);
