@@ -217,8 +217,6 @@ contract SupplyChainStorage is Ownable {
         return (data.coffeeFamily, data.typeOfSeed, data.fertilizerUsed);
     }
 
-    // Similar functions for Harvester, Exporter, Importer, Processor...
-    // (To save space, I'll include minimal examples, but in practice you'll need all of them)
 
     // Set harvester data
     function setHarvesterData(
